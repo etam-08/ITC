@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Income Tax Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="conversion.html">Conversion</a>
+    <a href="tax.html">Income Tax</a>
+    <a href="loops.html">Looping</a>
+    <a href="payroll.html">Payroll</a>
+  </nav>
+  <main>
+    <h1>Income Tax Calculator</h1>
+
+    <div class="card">
+      <label for="income">Net Taxable Income (₱)</label>
+      <input type="number" id="income" min="0" placeholder="Enter taxable income">
+      <button id="computeBtn">Compute Tax</button>
+      <div class="result" id="taxOut"></div>
+    </div>
+
+    <div class="card table-wrap">
+      <h2>Tax Table</h2>
+      <table>
+        <tr><th>Over</th><th>But Not Over</th><th>Basic Tax + Rate</th></tr>
+        <tr><td>-</td><td>₱250,000</td><td>0%</td></tr>
+        <tr><td>₱250,000</td><td>₱400,000</td><td>20% of the excess over ₱250,000</td></tr>
+        <tr><td>₱400,000</td><td>₱800,000</td><td>₱30,000 + 25% of the excess over ₱400,000</td></tr>
+        <tr><td>₱800,000</td><td>₱2,000,000</td><td>₱130,000 + 30% of the excess over ₱800,000</td></tr>
+        <tr><td>₱2,000,000</td><td>₱8,000,000</td><td>₱490,000 + 32% of the excess over ₱2,000,000</td></tr>
+        <tr><td>₱8,000,000</td><td>-</td><td>₱2,410,000 + 35% of the excess over ₱8,000,000</td></tr>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const computeTax = income => {
+      if (income <= 250000) return 0;
+      if (income <= 400000) return (income - 250000) * 0.20;
+      if (income <= 800000) return 30000 + (income - 400000) * 0.25;
+      if (income <= 2000000) return 130000 + (income - 800000) * 0.30;
+      if (income <= 8000000) return 490000 + (income - 2000000) * 0.32;
+      return 2410000 + (income - 8000000) * 0.35;
+    };
+
+    const formatPeso = amount =>
+      amount.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+
+    const incomeInput = document.getElementById('income');
+    const taxOut = document.getElementById('taxOut');
+
+    document.getElementById('computeBtn').addEventListener('click', () => {
+      const income = parseFloat(incomeInput.value);
+
+      if (Number.isNaN(income) || income < 0) {
+        taxOut.textContent = 'Please enter a valid taxable income.';
+        return;
+      }
+
+      taxOut.textContent = `Income Tax: ${formatPeso(computeTax(income))}`;
+    });
+  </script>
+</body>
+</html>

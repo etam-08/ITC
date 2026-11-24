@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simple Payroll</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="conversion.html">Conversion</a>
+    <a href="tax.html">Income Tax</a>
+    <a href="loops.html">Looping</a>
+    <a href="payroll.html">Payroll</a>
+  </nav>
+  <main>
+    <h1>Simple Payroll</h1>
+
+    <div class="card">
+      <h2>Add Employee</h2>
+      <label for="name">Employee Name</label>
+      <input type="text" id="name" placeholder="Employee name">
+      <label for="days">Days Worked</label>
+      <input type="number" id="days" min="0" placeholder="Days worked">
+      <label for="rate">Daily Rate</label>
+      <input type="number" id="rate" min="0" placeholder="Daily rate">
+      <label for="deduction">Deduction Amount</label>
+      <input type="number" id="deduction" min="0" placeholder="Deduction amount">
+      <button id="addBtn">Add</button>
+      <div class="result" id="message"></div>
+    </div>
+
+    <div class="card">
+      <h2>Delete Employee</h2>
+      <label for="lineNo">Line Number to Delete</label>
+      <input type="number" id="lineNo" min="1" placeholder="Line number">
+      <button id="deleteBtn">Delete</button>
+    </div>
+
+    <div class="card table-wrap">
+      <h2>Payroll List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Employee Name</th>
+            <th>Days Worked</th>
+            <th>Daily Rate</th>
+            <th>Gross Pay</th>
+            <th>Deduction Amount</th>
+            <th>Net Pay</th>
+          </tr>
+        </thead>
+        <tbody id="payrollBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const employees = [];
+
+    const nameInput = document.getElementById('name');
+    const daysInput = document.getElementById('days');
+    const rateInput = document.getElementById('rate');
+    const deductionInput = document.getElementById('deduction');
+    const lineNoInput = document.getElementById('lineNo');
+    const message = document.getElementById('message');
+    const payrollBody = document.getElementById('payrollBody');
+
+    const money = amount =>
+      amount.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+
+    // Redraws the whole table from the employees array
+    const renderTable = () => {
+      payrollBody.innerHTML = employees
+        .map((emp, index) => {
+          const gross = emp.days * emp.rate;
+          const net = gross - emp.deduction;
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${emp.name}</td>
+              <td>${emp.days}</td>
+              <td>${money(emp.rate)}</td>
+              <td>${money(gross)}</td>
+              <td>${money(emp.deduction)}</td>
+              <td>${money(net)}</td>
+            </tr>`;
+        })
+        .join('');
+    };
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const days = parseFloat(daysInput.value);
+      const rate = parseFloat(rateInput.value);
+      const deduction = parseFloat(deductionInput.value);
+
+      if (!name || [days, rate, deduction].some(Number.isNaN)) {
+        message.textContent = 'Please fill in all fields with valid values.';
+        return;
+      }
+
+      employees.push({ name, days, rate, deduction });
+      renderTable();
+      message.textContent = '';
+      [nameInput, daysInput, rateInput, deductionInput].forEach(input => (input.value = ''));
+    });
+
+    document.getElementById('deleteBtn').addEventListener('click', () => {
+      const lineNo = parseInt(lineNoInput.value, 10);
+
+      if (Number.isNaN(lineNo) || lineNo < 1 || lineNo > employees.length) {
+        alert('Invalid line number.');
+        return;
+      }
+
+      employees.splice(lineNo - 1, 1);
+      renderTable();
+      lineNoInput.value = '';
+    });
+  </script>
+</body>
+</html>

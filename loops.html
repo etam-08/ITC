@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Looping</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="conversion.html">Conversion</a>
+    <a href="tax.html">Income Tax</a>
+    <a href="loops.html">Looping</a>
+    <a href="payroll.html">Payroll</a>
+  </nav>
+  <main>
+    <h1>Looping</h1>
+
+    <div class="card">
+      <label for="n">Enter n (a whole number, 1 or higher)</label>
+      <input type="number" id="n" min="1" placeholder="Enter n">
+      <button id="computeBtn">Compute</button>
+    </div>
+
+    <div class="card">
+      <h2>1. Factorial of n (While Loop)</h2>
+      <div class="result" id="factOut"></div>
+    </div>
+
+    <div class="card">
+      <h2>2. Sum of the first n numbers (Do While Loop)</h2>
+      <div class="result" id="sumOut"></div>
+    </div>
+
+    <div class="card">
+      <h2>3. Average of the first n numbers (For Loop)</h2>
+      <div class="result" id="avgOut"></div>
+    </div>
+  </main>
+
+  <script>
+    // Factorial using a while loop: n! = n x (n-1) x ... x 1
+    const factorialWhile = n => {
+      let result = 1;
+      let i = 1;
+      while (i <= n) {
+        result *= i;
+        i++;
+      }
+      return result;
+    };
+
+    // Sum of 1 to n using a do while loop
+    const sumDoWhile = n => {
+      let sum = 0;
+      let i = 1;
+      do {
+        sum += i;
+        i++;
+      } while (i <= n);
+      return sum;
+    };
+
+    // Average of 1 to n using a for loop
+    const averageFor = n => {
+      let sum = 0;
+      for (let i = 1; i <= n; i++) {
+        sum += i;
+      }
+      return sum / n;
+    };
+
+    const nInput = document.getElementById('n');
+    const factOut = document.getElementById('factOut');
+    const sumOut = document.getElementById('sumOut');
+    const avgOut = document.getElementById('avgOut');
+
+    document.getElementById('computeBtn').addEventListener('click', () => {
+      const n = parseInt(nInput.value, 10);
+
+      if (Number.isNaN(n) || n < 1) {
+        factOut.textContent = 'Please enter a whole number of 1 or higher.';
+        sumOut.textContent = '';
+        avgOut.textContent = '';
+        return;
+      }
+
+      factOut.textContent = `${n}! = ${factorialWhile(n)}`;
+      sumOut.textContent = `Sum = ${sumDoWhile(n)}`;
+      avgOut.textContent = `Average = ${averageFor(n)}`;
+    });
+  </script>
+</body>
+</html>
